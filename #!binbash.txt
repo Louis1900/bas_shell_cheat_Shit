@@ -1,0 +1,121 @@
+#!/bin/bash
+
+# =====================================
+# 1. File và thư mục
+# Tạo cây thư mục
+mkdir -p project/{src,docs,data}
+
+# Tạo file readme.txt (nếu chưa có)
+echo "This is the readme file." > readme.txt
+
+# Copy file vào 3 thư mục
+cp readme.txt project/src/
+cp readme.txt project/docs/
+cp readme.txt project/data/
+
+# Di chuyển thư mục data vào docs
+mv project/data project/docs/
+
+# =====================================
+# 2. Phân quyền và người dùng
+# Tạo người dùng tên student (cần sudo)
+sudo adduser student
+
+# Tạo thư mục /home/student/docs
+sudo mkdir -p /home/student/docs
+
+# Chuyển quyền sở hữu thư mục cho user student
+sudo chown student:student /home/student/docs
+
+# Chỉ cho phép student ghi (700: rwx------)
+sudo chmod 700 /home/student/docs
+
+# =====================================
+# 3. Làm việc với nội dung file
+# Hiển thị 5 dòng đầu của file /etc/passwd
+head -n 5 /etc/passwd
+
+# Đếm số lần xuất hiện từ "admin" trong log.txt
+grep -o "admin" log.txt | wc -l
+
+# Lọc các dòng chứa "192.168" trong iplist.txt
+grep "192.168" iplist.txt
+
+# =====================================
+# 4. Tìm kiếm và xử lý tệp
+# Tìm tất cả các file .log trong /var/log
+find /var/log -type f -name "*.log"
+
+# Tìm file lớn hơn 10MB trong thư mục hiện tại
+find . -type f -size +10M
+
+
+# =====================================
+# 5. Shell script và biến
+# Tạo file script
+nano check_user.sh
+
+Nội dung file check_user.sh:
+#!/bin/bash
+read -p "Nhập tên người dùng: " username
+if id "$username" >/dev/null 2>&1; then
+    echo "Người dùng $username tồn tại."
+    id "$username"
+else
+    echo "Người dùng $username không tồn tại."
+fi
+
+# Cấp quyền thực thi và chạy script
+chmod +x check_user.sh
+./check_user.sh
+
+
+# =====================================
+# 6. Nén và giải nén
+# Nén thư mục project thành project.tar.gz
+tar -czvf project.tar.gz project/
+
+# Giải nén file data.zip vào thư mục output
+unzip data.zip -d output/
+
+
+# =====================================
+# 7. Quản lý tiến trình
+# Hiển thị tiến trình của người dùng hiện tại
+ps -u $USER
+
+# Dừng tiến trình tên firefox (cần sudo nếu không phải của bạn)
+pkill firefox
+
+
+# =====================================
+# 8. Mạng và kết nối
+# Hiển thị địa chỉ IP hiện tại
+ip a
+# Hoặc
+hostname -I
+
+# Gửi 4 gói ping đến google.com
+ping -c 4 google.com
+
+
+# =====================================
+# 9. Lịch sử và biến hệ thống
+# Tạo alias ll cho ls -al
+alias ll="ls -al"
+
+# (Để lưu vĩnh viễn, thêm vào ~/.bashrc hoặc ~/.zshrc)
+echo 'alias ll="ls -al"' >> ~/.bashrc
+
+# Hiển thị tất cả biến môi trường đang export
+export
+
+
+# =====================================
+# 10. Lịch và thời gian
+# Hiển thị ngày giờ hiện tại
+date
+
+# Mở trình chỉnh sửa crontab
+(crontab -l 2>/dev/null; echo "0 12 * * * /path/to/backup.sh") | crontab -
+
